@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Example: System Info",
+    "script": "custom-systeminfo.ps1"
+  },
+  {
+    "name": "Example: Clean Temp Files",
+    "script": "custom-clean-temp.ps1"
+  },
+  {
+    "name": "Flush DNS",
+    "script": "custom-flush-dns.ps1"
+  }
+]

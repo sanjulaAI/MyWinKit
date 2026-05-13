@@ -1,0 +1,31 @@
+{
+  "Browsers": [
+    { "name": "Brave Browser",       "id": "Brave.Brave" },
+    { "name": "Google Chrome",       "id": "Google.Chrome" },
+    { "name": "Mozilla Firefox",     "id": "Mozilla.Firefox" }
+  ],
+  "Development": [
+    { "name": "Visual Studio Code",  "id": "Microsoft.VisualStudioCode" },
+    { "name": "Git",                 "id": "Git.Git" },
+    { "name": "Node.js LTS",         "id": "OpenJS.NodeJS.LTS" },
+    { "name": "Python 3",            "id": "Python.Python.3.12" },
+    { "name": "GitHub Desktop",      "id": "GitHub.GitHubDesktop" }
+  ],
+  "Utilities": [
+    { "name": "7-Zip",               "id": "7zip.7zip" },
+    { "name": "Notepad++",           "id": "Notepad++.Notepad++" },
+    { "name": "PowerToys",           "id": "Microsoft.PowerToys" },
+    { "name": "Everything Search",   "id": "voidtools.Everything" },
+    { "name": "ShareX",              "id": "ShareX.ShareX" }
+  ],
+  "Media": [
+    { "name": "VLC Media Player",    "id": "VideoLAN.VLC" },
+    { "name": "Spotify",             "id": "Spotify.Spotify" },
+    { "name": "OBS Studio",          "id": "OBSProject.OBSStudio" }
+  ],
+  "Communication": [
+    { "name": "Discord",             "id": "Discord.Discord" },
+    { "name": "Telegram",            "id": "Telegram.TelegramDesktop" },
+    { "name": "Zoom",                "id": "Zoom.Zoom" }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Disable Telemetry",
+    "description": "Turn off Windows data collection and diagnostics tracking",
+    "script": "tweak-disable-telemetry.ps1"
+  },
+  {
+    "name": "Debloat - Remove default apps",
+    "description": "Remove Candy Crush, Xbox bloat, Bing News, etc.",
+    "script": "tweak-debloat.ps1"
+  },
+  {
+    "name": "Disable Cortana",
+    "description": "Disable Cortana search assistant",
+    "script": "tweak-disable-cortana.ps1"
+  },
+  {
+    "name": "Show file extensions",
+    "description": "Always show file extensions in Explorer",
+    "script": "tweak-show-extensions.ps1"
+  },
+  {
+    "name": "Disable Bing search in Start Menu",
+    "description": "Stop start menu from sending searches to Bing",
+    "script": "tweak-disable-bing.ps1"
+  },
+  {
+    "name": "Restore classic right-click menu (Win11)",
+    "description": "Bring back the full Windows 10 style context menu",
+    "script": "tweak-classic-context-menu.ps1"
+  },
+  {
+    "name": "Dark Mode",
+    "description": "Enable system-wide dark mode",
+    "script": "tweak-dark-mode.ps1"
+  },
+  {
+    "name": "Disable Sticky Keys prompt",
+    "description": "Stop the annoying sticky keys popup",
+    "script": "tweak-disable-sticky-keys.ps1"
+  }
+]
