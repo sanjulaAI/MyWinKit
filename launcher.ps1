@@ -1,6 +1,6 @@
 # ============================================================
 #  MyWinKit - All-in-One Windows Toolkit
-#  Launch: irm https://raw.githubusercontent.com/YOUR_USERNAME/MyWinKit/main/launcher.ps1 | iex
+#  Launch: irm https://raw.githubusercontent.com/sanjulaAI/MyWinKit/main/launcher.ps1 | iex
 # ============================================================
 
 # ---- Config: where the rest of the files live on GitHub ----
@@ -30,7 +30,7 @@ function Invoke-RemoteScript {
     }
 }
 
-# ---- Helper: fetch JSON config (app list, tweak list) ----
+# ---- Helper: fetch JSON config ----
 function Get-RemoteJson {
     param([string]$Path)
     try {
@@ -42,13 +42,23 @@ function Get-RemoteJson {
 
 # ---- Load the XAML GUI definition ----
 $xamlText = Invoke-RestMethod -Uri "$global:RepoBase/gui.xaml" -UseBasicParsing
+$xamlText = $xamlText -replace 'x:Class=".*?"', '' -replace 'mc:Ignorable=".*?"', ''
 $xaml = [xml]$xamlText
 $reader = New-Object System.Xml.XmlNodeReader $xaml
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
-# ---- Wire up named controls ----
-$xaml.SelectNodes("//*[@Name]") | ForEach-Object {
-    Set-Variable -Name $_.Name -Value $window.FindName($_.Name) -Scope Script
+# ---- Find controls explicitly ----
+$AppsPanel       = $window.FindName("AppsPanel")
+$TweaksPanel     = $window.FindName("TweaksPanel")
+$CustomPanel     = $window.FindName("CustomPanel")
+$LogBox          = $window.FindName("LogBox")
+$InstallBtn      = $window.FindName("InstallBtn")
+$UninstallBtn    = $window.FindName("UninstallBtn")
+$ApplyTweaksBtn  = $window.FindName("ApplyTweaksBtn")
+
+if (-not $AppsPanel) {
+    [System.Windows.MessageBox]::Show("GUI controls failed to load. Check that gui.xaml uploaded correctly.", "Error", "OK", "Error")
+    return
 }
 
 # ============================================================
@@ -138,7 +148,7 @@ $ApplyTweaksBtn.Add_Click({
 })
 
 # ============================================================
-#  TAB 3: CUSTOM SCRIPTS  (your own stuff)
+#  TAB 3: CUSTOM SCRIPTS
 # ============================================================
 $customs = Get-RemoteJson "config/custom.json"
 if ($customs) {
@@ -153,7 +163,7 @@ if ($customs) {
             param($sender, $e)
             $LogBox.AppendText("Running: $($sender.Content)`n")
             Invoke-RemoteScript "scripts/$($sender.Tag)"
-        })
+        }.GetNewClosure())
         $CustomPanel.Children.Add($btn) | Out-Null
     }
 }
