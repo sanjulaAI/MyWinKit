@@ -1,4 +1,4 @@
-# MyWinKit v6 - Silver Surfer Theme
+# MyWinKit v6.1 - Silver Surfer Theme
 
 $global:RepoBase = "https://raw.githubusercontent.com/sanjulaAI/MyWinKit/main"
 
@@ -39,7 +39,6 @@ $xamlString = @'
         WindowStartupLocation="CenterScreen"
         Background="Black">
     <Window.Resources>
-        <!-- Chrome silver gradient brush -->
         <LinearGradientBrush x:Key="ChromeBrush" StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#E8E8E8" Offset="0"/>
             <GradientStop Color="#A8A8A8" Offset="0.5"/>
@@ -54,7 +53,6 @@ $xamlString = @'
             <GradientStop Color="#2A2A2A" Offset="1"/>
         </LinearGradientBrush>
 
-        <!-- Chrome button style -->
         <Style x:Key="ChromeBtn" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource ChromeButton}"/>
             <Setter Property="Foreground" Value="#E8E8E8"/>
@@ -85,7 +83,6 @@ $xamlString = @'
     </Window.Resources>
 
     <Grid>
-        <!-- Background image fills entire window -->
         <Grid.Background>
             <ImageBrush ImageSource="https://raw.githubusercontent.com/sanjulaAI/MyWinKit/main/SILVER_SURFER.png"
                         Stretch="UniformToFill"/>
@@ -97,7 +94,6 @@ $xamlString = @'
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
 
-        <!-- Header: title left, clock top-right over the figure's head -->
         <Grid Grid.Row="0" Margin="20,15,20,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -121,8 +117,7 @@ $xamlString = @'
             </StackPanel>
         </Grid>
 
-        <!-- Main content - left side only so figure stays visible on right -->
-        <Border Grid.Row="1" Margin="15,5,15,5" CornerRadius="8" HorizontalAlignment="Stretch">
+        <Border Grid.Row="1" Margin="15,5,15,5" CornerRadius="8" HorizontalAlignment="Left" Width="540">
             <Border.Background>
                 <SolidColorBrush Color="#000000" Opacity="0.55"/>
             </Border.Background>
@@ -136,8 +131,8 @@ $xamlString = @'
                     <Style TargetType="TabItem">
                         <Setter Property="Background" Value="Transparent"/>
                         <Setter Property="Foreground" Value="#AAAAAA"/>
-                        <Setter Property="Padding" Value="16,8"/>
-                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="Padding" Value="12,8"/>
+                        <Setter Property="FontSize" Value="11"/>
                         <Setter Property="FontWeight" Value="SemiBold"/>
                         <Setter Property="Template">
                             <Setter.Value>
@@ -162,123 +157,92 @@ $xamlString = @'
 
                 <TabItem Header="INSTALL APPS">
                     <Grid Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-                                <StackPanel Name="AppsPanel" Margin="15"/>
-                            </ScrollViewer>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,10">
-                                <Button Name="InstallBtn" Content="INSTALL" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
-                                <Button Name="UninstallBtn" Content="UNINSTALL" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
-                                <Button Name="FixWingetBtn" Content="FIX WINGET" Style="{StaticResource ChromeBtn}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Grid>
-                </TabItem>
-
-                <TabItem Header="TWEAKS &amp; DEBLOAT">
-                    <Grid Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-                                <StackPanel Name="TweaksPanel" Margin="15"/>
-                            </ScrollViewer>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,10">
-                                <Button Name="ApplyTweaksBtn" Content="APPLY SELECTED" Style="{StaticResource ChromeBtn}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Grid>
-                </TabItem>
-
-                <TabItem Header="SYSTEM MONITOR">
-                    <Grid Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
-                            <StackPanel Margin="20">
-                                <TextBlock Text="LIVE SYSTEM STATS" Foreground="{StaticResource ChromeBrush}" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
-
-                                <TextBlock Name="CpuLabel" Foreground="#E8E8E8" FontSize="13" Margin="0,5,0,3"/>
-                                <ProgressBar Name="CpuBar" Height="14" Maximum="100" Foreground="#E8E8E8" Background="#22FFFFFF" BorderThickness="0"/>
-
-                                <TextBlock Name="RamLabel" Foreground="#E8E8E8" FontSize="13" Margin="0,12,0,3"/>
-                                <ProgressBar Name="RamBar" Height="14" Maximum="100" Foreground="#C0C0C0" Background="#22FFFFFF" BorderThickness="0"/>
-
-                                <TextBlock Name="DiskLabel" Foreground="#E8E8E8" FontSize="13" Margin="0,12,0,3"/>
-                                <ProgressBar Name="DiskBar" Height="14" Maximum="100" Foreground="#A0A0A0" Background="#22FFFFFF" BorderThickness="0"/>
-
-                                <TextBlock Text="NETWORK INFORMATION" Foreground="{StaticResource ChromeBrush}" FontSize="14" FontWeight="Bold" Margin="0,20,0,8"/>
-                                <Border Background="#33000000" CornerRadius="4" Padding="2">
-                                    <TextBox Name="NetworkInfo" Background="Transparent" Foreground="#E8E8E8" FontFamily="Consolas" FontSize="12" BorderThickness="0" IsReadOnly="True" Padding="10" TextWrapping="Wrap" Text="Loading..."/>
-                                </Border>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                                    <Button Name="RefreshStatsBtn" Content="REFRESH" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
-                                    <Button Name="SpeedTestBtn" Content="PING TEST" Style="{StaticResource ChromeBtn}"/>
-                                </StackPanel>
-                            </StackPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Name="AppsPanel" Margin="15"/>
                         </ScrollViewer>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,10">
+                            <Button Name="InstallBtn" Content="INSTALL" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
+                            <Button Name="UninstallBtn" Content="UNINSTALL" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
+                            <Button Name="FixWingetBtn" Content="FIX WINGET" Style="{StaticResource ChromeBtn}"/>
+                        </StackPanel>
                     </Grid>
+                </TabItem>
+
+                <TabItem Header="TWEAKS">
+                    <Grid Margin="0,5,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Name="TweaksPanel" Margin="15"/>
+                        </ScrollViewer>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,10">
+                            <Button Name="ApplyTweaksBtn" Content="APPLY SELECTED" Style="{StaticResource ChromeBtn}"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="MONITOR">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="20">
+                            <TextBlock Text="LIVE SYSTEM STATS" Foreground="{StaticResource ChromeBrush}" FontSize="14" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                            <TextBlock Name="CpuLabel" Foreground="#E8E8E8" FontSize="13" Margin="0,5,0,3"/>
+                            <ProgressBar Name="CpuBar" Height="14" Maximum="100" Foreground="#E8E8E8" Background="#22FFFFFF" BorderThickness="0"/>
+
+                            <TextBlock Name="RamLabel" Foreground="#E8E8E8" FontSize="13" Margin="0,12,0,3"/>
+                            <ProgressBar Name="RamBar" Height="14" Maximum="100" Foreground="#C0C0C0" Background="#22FFFFFF" BorderThickness="0"/>
+
+                            <TextBlock Name="DiskLabel" Foreground="#E8E8E8" FontSize="13" Margin="0,12,0,3"/>
+                            <ProgressBar Name="DiskBar" Height="14" Maximum="100" Foreground="#A0A0A0" Background="#22FFFFFF" BorderThickness="0"/>
+
+                            <TextBlock Text="NETWORK INFORMATION" Foreground="{StaticResource ChromeBrush}" FontSize="14" FontWeight="Bold" Margin="0,20,0,8"/>
+                            <Border Background="#33000000" CornerRadius="4" Padding="2">
+                                <TextBox Name="NetworkInfo" Background="Transparent" Foreground="#E8E8E8" FontFamily="Consolas" FontSize="12" BorderThickness="0" IsReadOnly="True" Padding="10" TextWrapping="Wrap" Text="Loading..."/>
+                            </Border>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                                <Button Name="RefreshStatsBtn" Content="REFRESH" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
+                                <Button Name="SpeedTestBtn" Content="PING TEST" Style="{StaticResource ChromeBtn}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
                 </TabItem>
 
                 <TabItem Header="DRIVERS">
                     <Grid Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="Scan and update drivers via Windows Update" Foreground="#AAAAAA" Margin="20,15,20,10" FontStyle="Italic"/>
-                            <Border Grid.Row="1" Background="#33000000" CornerRadius="4" Margin="20,0">
-                                <ScrollViewer>
-                                    <TextBox Name="DriverOutput" Background="Transparent" Foreground="#E8E8E8" FontFamily="Consolas" FontSize="12" BorderThickness="0" IsReadOnly="True" Padding="10" TextWrapping="Wrap" Text="Click SCAN to check for driver updates."/>
-                                </ScrollViewer>
-                            </Border>
-                            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="20,10,20,15">
-                                <Button Name="ScanDriversBtn" Content="SCAN" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
-                                <Button Name="InstallDriversBtn" Content="INSTALL ALL" Style="{StaticResource ChromeBtn}"/>
-                            </StackPanel>
-                        </Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Scan and update drivers via Windows Update" Foreground="#AAAAAA" Margin="20,15,20,10" FontStyle="Italic"/>
+                        <Border Grid.Row="1" Background="#33000000" CornerRadius="4" Margin="20,0">
+                            <ScrollViewer>
+                                <TextBox Name="DriverOutput" Background="Transparent" Foreground="#E8E8E8" FontFamily="Consolas" FontSize="12" BorderThickness="0" IsReadOnly="True" Padding="10" TextWrapping="Wrap" Text="Click SCAN to check for driver updates."/>
+                            </ScrollViewer>
+                        </Border>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="20,10,20,15">
+                            <Button Name="ScanDriversBtn" Content="SCAN" Style="{StaticResource ChromeBtn}" Margin="0,0,8,0"/>
+                            <Button Name="InstallDriversBtn" Content="INSTALL ALL" Style="{StaticResource ChromeBtn}"/>
+                        </StackPanel>
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="MY SCRIPTS">
-                    <Grid Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
-                            <WrapPanel Name="CustomPanel" Margin="15"/>
-                        </ScrollViewer>
-                    </Grid>
+                <TabItem Header="SCRIPTS">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <WrapPanel Name="CustomPanel" Margin="15"/>
+                    </ScrollViewer>
                 </TabItem>
             </TabControl>
         </Border>
 
-        <!-- Log -->
-        <Border Grid.Row="2" Margin="15,5,15,15" CornerRadius="8" HorizontalAlignment="Stretch" MaxWidth="520" HorizontalAlignment="Left">
+        <Border Grid.Row="2" Margin="15,5,15,15" CornerRadius="8" HorizontalAlignment="Left" Width="540">
             <Border.Background>
                 <SolidColorBrush Color="#000000" Opacity="0.7"/>
             </Border.Background>
@@ -301,7 +265,6 @@ $stringReader = New-Object System.IO.StringReader $xamlString
 $xmlReader = [System.Xml.XmlReader]::Create($stringReader)
 $window = [Windows.Markup.XamlReader]::Load($xmlReader)
 
-# Find controls
 $AppsPanel        = $window.FindName("AppsPanel")
 $TweaksPanel      = $window.FindName("TweaksPanel")
 $CustomPanel      = $window.FindName("CustomPanel")
@@ -325,7 +288,6 @@ $ScanDriversBtn   = $window.FindName("ScanDriversBtn")
 $InstallDriversBtn = $window.FindName("InstallDriversBtn")
 $DriverOutput     = $window.FindName("DriverOutput")
 
-# Clock
 $timer = New-Object System.Windows.Threading.DispatcherTimer
 $timer.Interval = [TimeSpan]::FromSeconds(1)
 $timer.Add_Tick({
@@ -336,7 +298,6 @@ $timer.Start()
 $ClockText.Text = Get-Date -Format "HH:mm:ss"
 $DateText.Text  = (Get-Date -Format "dddd, MMM dd yyyy").ToUpper()
 
-# System stats
 function Update-SystemStats {
     try {
         $cpu = (Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average
@@ -460,7 +421,6 @@ $InstallDriversBtn.Add_Click({
     }
 })
 
-# Apps tab
 $apps = Get-RemoteJson "config/apps.json"
 if ($apps) {
     foreach ($category in $apps.PSObject.Properties) {
@@ -518,7 +478,6 @@ $UninstallBtn.Add_Click({
     $LogBox.AppendText("`n// Done.")
 })
 
-# Tweaks tab
 $tweaks = Get-RemoteJson "config/tweaks.json"
 if ($tweaks) {
     foreach ($tweak in $tweaks) {
@@ -542,7 +501,6 @@ $ApplyTweaksBtn.Add_Click({
     $LogBox.AppendText("`n// Tweaks applied.")
 })
 
-# Custom scripts tab
 $customs = Get-RemoteJson "config/custom.json"
 if ($customs) {
     foreach ($item in $customs) {
