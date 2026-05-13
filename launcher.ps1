@@ -1,12 +1,10 @@
 # ============================================================
 #  MyWinKit - All-in-One Windows Toolkit
-#  Launch: irm https://raw.githubusercontent.com/sanjulaAI/MyWinKit/main/launcher.ps1 | iex
 # ============================================================
 
-# ---- Config: where the rest of the files live on GitHub ----
 $global:RepoBase = "https://raw.githubusercontent.com/sanjulaAI/MyWinKit/main"
 
-# ---- Auto-elevate to Admin ----
+# ---- Auto-elevate ----
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host "Re-launching as Administrator..." -ForegroundColor Yellow
     $cmd = "irm $global:RepoBase/launcher.ps1 | iex"
@@ -14,12 +12,12 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     exit
 }
 
-# ---- Load required assemblies for WPF GUI ----
+# ---- Load WPF assemblies ----
 Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName PresentationCore
 Add-Type -AssemblyName WindowsBase
+Add-Type -AssemblyName System.Windows.Forms
 
-# ---- Helper: download and run a remote script in memory ----
 function Invoke-RemoteScript {
     param([string]$Path)
     try {
@@ -30,7 +28,6 @@ function Invoke-RemoteScript {
     }
 }
 
-# ---- Helper: fetch JSON config ----
 function Get-RemoteJson {
     param([string]$Path)
     try {
@@ -40,14 +37,90 @@ function Get-RemoteJson {
     }
 }
 
-# ---- Load the XAML GUI definition ----
-$xamlText = Invoke-RestMethod -Uri "$global:RepoBase/gui.xaml" -UseBasicParsing
-$xamlText = $xamlText -replace 'x:Class=".*?"', '' -replace 'mc:Ignorable=".*?"', ''
-$xaml = [xml]$xamlText
+# ---- XAML is embedded directly (no external file = no parsing issues) ----
+[xml]$xaml = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MyWinKit" Height="650" Width="900"
+        Background="#1E1E1E" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Background" Value="#2D2D30"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#0E639C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#252526" Padding="15,10">
+            <TextBlock Text="MyWinKit  -  All-in-One Windows Toolkit"
+                       Foreground="#4FC3F7" FontSize="18" FontWeight="Bold"/>
+        </Border>
+        <TabControl Grid.Row="1" Background="#1E1E1E" BorderThickness="0">
+            <TabItem Header="Install Apps">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Name="AppsPanel" Margin="15"/>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,10">
+                        <Button Name="InstallBtn" Content="Install Selected" Margin="0,0,10,0"/>
+                        <Button Name="UninstallBtn" Content="Uninstall Selected" Background="#C42B1C"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Tweaks and Debloat">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Name="TweaksPanel" Margin="15"/>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,10">
+                        <Button Name="ApplyTweaksBtn" Content="Apply Selected Tweaks"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="My Scripts">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <WrapPanel Name="CustomPanel" Margin="15"/>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+        <Border Grid.Row="2" Background="#0C0C0C" Margin="10,5,10,10">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBox Name="LogBox" Background="Transparent" Foreground="#7FFF7F"
+                         FontFamily="Consolas" FontSize="12" BorderThickness="0"
+                         IsReadOnly="True" TextWrapping="Wrap" Padding="10"
+                         Text="Ready. Select options and click an action button.&#10;"/>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>
+"@
+
 $reader = New-Object System.Xml.XmlNodeReader $xaml
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
-# ---- Find controls explicitly ----
+# ---- Find controls ----
 $AppsPanel       = $window.FindName("AppsPanel")
 $TweaksPanel     = $window.FindName("TweaksPanel")
 $CustomPanel     = $window.FindName("CustomPanel")
@@ -56,13 +129,23 @@ $InstallBtn      = $window.FindName("InstallBtn")
 $UninstallBtn    = $window.FindName("UninstallBtn")
 $ApplyTweaksBtn  = $window.FindName("ApplyTweaksBtn")
 
-if (-not $AppsPanel) {
-    [System.Windows.MessageBox]::Show("GUI controls failed to load. Check that gui.xaml uploaded correctly.", "Error", "OK", "Error")
+# Diagnostic check
+$missing = @()
+if (-not $AppsPanel)      { $missing += "AppsPanel" }
+if (-not $TweaksPanel)    { $missing += "TweaksPanel" }
+if (-not $CustomPanel)    { $missing += "CustomPanel" }
+if (-not $LogBox)         { $missing += "LogBox" }
+if (-not $InstallBtn)     { $missing += "InstallBtn" }
+if (-not $UninstallBtn)   { $missing += "UninstallBtn" }
+if (-not $ApplyTweaksBtn) { $missing += "ApplyTweaksBtn" }
+
+if ($missing.Count -gt 0) {
+    [System.Windows.MessageBox]::Show("Missing controls: $($missing -join ', ')", "Error", "OK", "Error")
     return
 }
 
 # ============================================================
-#  TAB 1: INSTALL APPS  (winget)
+#  TAB 1: INSTALL APPS
 # ============================================================
 $apps = Get-RemoteJson "config/apps.json"
 if ($apps) {
@@ -84,6 +167,8 @@ if ($apps) {
             $AppsPanel.Children.Add($cb) | Out-Null
         }
     }
+} else {
+    $LogBox.AppendText("WARNING: Could not load apps.json from GitHub.`n")
 }
 
 $InstallBtn.Add_Click({
@@ -122,7 +207,7 @@ $UninstallBtn.Add_Click({
 })
 
 # ============================================================
-#  TAB 2: TWEAKS & DEBLOAT
+#  TAB 2: TWEAKS
 # ============================================================
 $tweaks = Get-RemoteJson "config/tweaks.json"
 if ($tweaks) {
@@ -135,6 +220,8 @@ if ($tweaks) {
         $cb.Foreground = "White"
         $TweaksPanel.Children.Add($cb) | Out-Null
     }
+} else {
+    $LogBox.AppendText("WARNING: Could not load tweaks.json from GitHub.`n")
 }
 
 $ApplyTweaksBtn.Add_Click({
@@ -166,9 +253,9 @@ if ($customs) {
         }.GetNewClosure())
         $CustomPanel.Children.Add($btn) | Out-Null
     }
+} else {
+    $LogBox.AppendText("WARNING: Could not load custom.json from GitHub.`n")
 }
 
-# ============================================================
-#  Show the window
-# ============================================================
+# ---- Show the window ----
 $window.ShowDialog() | Out-Null
